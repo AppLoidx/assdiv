@@ -1,4 +1,7 @@
 
+pidiv performs integer division of two 32-bit signed integers and
+writes the quotient and remainder to standard output.
+
 The dividend and divisor are defined at assembly time in the .data
 section of divide.s.
 
@@ -12,9 +15,10 @@ BUILDING
 
   $ make
 
+Output format: QUOTIENT R REMAINDER
+
 LIMITATIONS
 
-  - Outputs quotient only (no remainder)
   - Division by zero causes SIGFPE
-  - Maximum output: 10 digits (2^31-1)
+  - Maximum quotient: 10 digits (2^31-1)
 

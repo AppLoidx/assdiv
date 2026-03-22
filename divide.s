@@ -1,12 +1,12 @@
-# Integer division for x86-64 Linux
-# dividend / divisor -> stdout
+# Integer division with remainder for x86-64 Linux
+# Output format: "quotient R remainder\n"
 
 .section .data
     dividend: .long 100
     divisor:  .long 7
 
 .section .bss
-    .lcomm buffer, 16
+    .lcomm buffer, 32
 
 .section .text
     .globl _start
@@ -15,27 +15,47 @@ _start:
     movl dividend(%rip), %eax
     cltd
     divl divisor(%rip)           # EAX = quotient, EDX = remainder
-    movl %eax, %r12d
+    movl %eax, %r12d             # save quotient
+    movl %edx, %r13d             # save remainder
 
-    # Convert to ASCII string (reverse order)
-    lea buffer+14(%rip), %r8
+    # Build output string from end to start
+    lea buffer+30(%rip), %r8
     movb $10, (%r8)              # newline
     decq %r8
 
-    movl %r12d, %eax
+    # Convert remainder
+    movl %r13d, %eax
     movl $10, %ecx
-
-convert_loop:
+remainder_loop:
     xorl %edx, %edx
-    divl %ecx                    # EAX / 10 -> digit in EDX
+    divl %ecx
     addb $'0', %dl
     movb %dl, (%r8)
     decq %r8
     testl %eax, %eax
-    jnz convert_loop
+    jnz remainder_loop
+
+    # Add " R "
+    movb $' ', (%r8)
+    decq %r8
+    movb $'R', (%r8)
+    decq %r8
+    movb $' ', (%r8)
+    decq %r8
+
+    # Convert quotient
+    movl %r12d, %eax
+quotient_loop:
+    xorl %edx, %edx
+    divl %ecx
+    addb $'0', %dl
+    movb %dl, (%r8)
+    decq %r8
+    testl %eax, %eax
+    jnz quotient_loop
 
     incq %r8
-    lea buffer+15(%rip), %r9
+    lea buffer+31(%rip), %r9
     subq %r8, %r9                # R9 = length
 
     # write(1, buf, len)
