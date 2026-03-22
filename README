@@ -1,0 +1,20 @@
+
+The dividend and divisor are defined at assembly time in the .data
+section of divide.s.
+
+REQUIREMENTS
+
+  - GNU Assembler (as) 2.30+
+  - GNU Linker (ld) 2.30+
+  - Linux x86-64
+
+BUILDING
+
+  $ make
+
+LIMITATIONS
+
+  - Outputs quotient only (no remainder)
+  - Division by zero causes SIGFPE
+  - Maximum output: 10 digits (2^31-1)
+
