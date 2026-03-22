@@ -1,5 +1,5 @@
 
-pidiv performs integer division of two 32-bit signed integers and
+performs integer division of two 32-bit signed integers and
 writes the quotient and remainder to standard output.
 
 The dividend and divisor are defined at assembly time in the .data
