@@ -1,24 +1,57 @@
+PIDIV - Arithmetic Utilities
 
-performs integer division of two 32-bit signed integers and
-writes the quotient and remainder to standard output.
+OVERVIEW
 
-The dividend and divisor are defined at assembly time in the .data
-section of divide.s.
+Three programs for arithmetic operations:
+
+  divide    - integer division with remainder (x86-64 asm)
+  dividePi  - pi / divisor with FPU precision (x86-64 asm)
+  piCalc    - calculate pi to N digits (C)
 
 REQUIREMENTS
 
   - GNU Assembler (as) 2.30+
   - GNU Linker (ld) 2.30+
+  - GCC
   - Linux x86-64
 
 BUILDING
 
   $ make
 
-Output format: QUOTIENT R REMAINDER
+USAGE
+
+  $ ./divide
+  14 R 2
+
+  $ ./dividePi
+  0.448798951
+
+  $ ./piCalc
+  3.1415926535...
+
+CONFIGURATION
+
+divide.s / dividePi.s:
+  dividend: .long 100    # Numerator
+  divisor:  .long 7      # Denominator
+
+piCalc.c:
+  #define PRECISION 100  # Decimal places
+
+CLEAN
+
+  $ make clean
 
 LIMITATIONS
 
   - Division by zero causes SIGFPE
-  - Maximum quotient: 10 digits (2^31-1)
+  - piCalc precision limited by memory
 
+AUTHOR
+
+None.
+
+LICENSE
+
+Public domain.
