@@ -1,24 +1,34 @@
-# Makefile для divide.s
+# Makefile for pidiv
 
 AS = as
 LD = ld
 
-TARGET = divide
-SRC = divide.s
-OBJ = divide.o
+TARGETS = divide dividePi
 
-.PHONY: all clean run
+.PHONY: all clean run verify
 
-all: $(TARGET)
+all: $(TARGETS)
 
-$(TARGET): $(OBJ)
-	$(LD) $(OBJ) -o $(TARGET)
+divide: divide.o
+	$(LD) $< -o $@
 
-$(OBJ): $(SRC)
-	$(AS) $(SRC) -o $(OBJ)
+divide.o: divide.s
+	$(AS) $< -o $@
 
-run: $(TARGET)
-	./$(TARGET)
+dividePi: dividePi.o
+	$(LD) $< -o $@
+
+dividePi.o: dividePi.s
+	$(AS) $< -o $@
+
+run: $(TARGETS)
+	@./divide
+	@./dividePi
+
+verify: $(TARGETS)
+	@echo "=== dividePi (pi / 7) ==="
+	@echo -n "asm:   "; ./dividePi
+	@echo -n "check: "; python3 -c "import math; print(f'{math.pi/7:.9f}')"
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f *.o $(TARGETS)
